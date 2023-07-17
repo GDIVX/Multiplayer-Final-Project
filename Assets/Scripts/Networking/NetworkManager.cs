@@ -39,10 +39,11 @@ public class NetworkManager : MonoBehaviourPunCallbacks
         PhotonNetwork.CreateRoom(roomName, roomOptions: new RoomOptions { MaxPlayers = maxPlayers });
     }
 
-    public void JoinRoom(string roomName)
+    public bool TryToJoinRoom(string roomName)
     {
-        PhotonNetwork.JoinRoom(roomName);
+        return PhotonNetwork.JoinRandomRoom();
     }
+
 
     public void ChangeScene(string sceneName)
     {
@@ -52,5 +53,10 @@ public class NetworkManager : MonoBehaviourPunCallbacks
     public override void OnConnectedToMaster()
     {
         Debug.Log("Connected To Master Server!");
+    }
+
+    public override void OnJoinedRoom()
+    {
+        Debug.Log($"Joined {PhotonNetwork.CurrentRoom.Name}!");
     }
 }
