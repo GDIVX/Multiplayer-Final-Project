@@ -1,3 +1,4 @@
+using Photon.Pun;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -8,7 +9,7 @@ using WebSocketSharp;
 
 public class RoomConnectionManager : MonoBehaviour
 {
-    [SerializeField] TMP_InputField roomName_inputField, maxPlayers_InputField;
+    [SerializeField] TMP_InputField roomName_inputField, maxPlayers_InputField, userName_InputField;
 
     static NetworkManager NetworkManager => NetworkManager.instance;
 
@@ -66,11 +67,25 @@ public class RoomConnectionManager : MonoBehaviour
 
     public void JoinRoom()
     {
-        TryToJoinRoom(roomName_inputField);
+        if (TryToJoinRoom(roomName_inputField))
+        {
+            StartGame();
+        }
+    }
+
+    private void StartGame()
+    {
+        userName_InputField.text ??= "Player";
+
+
+        PhotonNetwork.LocalPlayer.NickName = userName_InputField.text;
+        NetworkManager.ChangeScene("Game");
     }
 
     public void CreateRoom()
     {
         CreateRoom(roomName_inputField, maxPlayers_InputField);
+        StartGame();
+
     }
 }
