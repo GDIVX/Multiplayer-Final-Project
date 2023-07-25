@@ -13,6 +13,7 @@ namespace Assets.Scripts.CharacterAbilities
         [SerializeField] AnimationCurve decelerationCurve;         // Animation curve for deceleration
         [SerializeField] float maxVelocity = 10f;                  // Adjust the maximum velocity as per your needs
         [SerializeField] GameObject model;
+        [SerializeField] Eating eating;
 
         float currentSpeed = 0f;
         float accelerationTimer = 0f;
@@ -31,6 +32,17 @@ namespace Assets.Scripts.CharacterAbilities
         private void Start()
         {
             Controller ??= GetComponent<IController>();
+            eating.OnEatingEvent += (eater, sizeIncrease) =>
+            {
+                if (eater == transform)
+                {
+                    //slow down
+                    MovementSpeed = Mathf.Clamp(MovementSpeed - sizeIncrease, 0.2f, MovementSpeed);
+
+                }
+            };
+
+
         }
 
         private void Update()

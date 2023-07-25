@@ -16,6 +16,9 @@ public class RoomConnectionManager : MonoBehaviour
     public UnityEvent<string> OnJoinToRoomFailed;
     public UnityEvent<string> OnCreateRoomFailed;
 
+    const string GAME_SCENE_NAME = "Game";
+
+
     public void CreateRoom(string roomName, int maxPlayers)
     {
         NetworkManager.CreateRoom(roomName, maxPlayers);
@@ -79,7 +82,8 @@ public class RoomConnectionManager : MonoBehaviour
 
 
         PhotonNetwork.LocalPlayer.NickName = userName_InputField.text;
-        NetworkManager.ChangeScene("Game");
+        NetworkManager.ChangeScene(GAME_SCENE_NAME);
+
     }
 
     public void CreateRoom()

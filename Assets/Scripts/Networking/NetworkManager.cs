@@ -50,6 +50,7 @@ public class NetworkManager : MonoBehaviourPunCallbacks
         PhotonNetwork.LoadLevel(sceneName);
     }
 
+
     public override void OnConnectedToMaster()
     {
         Debug.Log("Connected To Master Server!");
