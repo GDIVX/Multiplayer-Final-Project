@@ -182,7 +182,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   roomName_inputField: {fileID: 1459554981}
   maxPlayers_InputField: {fileID: 1774264307}
-  userName_InputField: {fileID: 0}
+  userName_InputField: {fileID: 798415417}
   OnJoinToRoomFailed:
     m_PersistentCalls:
       m_Calls: []
