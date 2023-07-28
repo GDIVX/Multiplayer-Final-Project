@@ -25,7 +25,6 @@ public class GameManager : MonoBehaviourPun
         }
     }
 
-    [PunRPC]
     public void AddActivePlayer(PhotonView player)
     {
         if (!PhotonNetwork.IsMasterClient)
@@ -40,7 +39,6 @@ public class GameManager : MonoBehaviourPun
         }
     }
 
-    [PunRPC]
     public void RemoveActivePlayer(PhotonView player)
     {
         if (!PhotonNetwork.IsMasterClient)
@@ -59,7 +57,7 @@ public class GameManager : MonoBehaviourPun
                 PhotonView winner = trackedPlayers[0];
 
                 //tell all clients that the game is over
-                photonView.RPC("GameOver", RpcTarget.All, winner);
+                photonView.RPC("GameOver", RpcTarget.All, winner.ViewID);
             }
         }
     }
@@ -87,10 +85,13 @@ public class GameManager : MonoBehaviourPun
     }
 
     [PunRPC]
-    void GameOver(PhotonView winner)
+    void GameOver(int winnerViewID)
     {
-        //do something with the winner
-        Debug.Log($"Player {winner.Owner.NickName} won!");
+        PhotonView winner = PhotonView.Find(winnerViewID);
+        if (winner != null)
+        {
+            Debug.Log($"Player {winner.Owner.NickName} won!");
+        }
     }
 
 
