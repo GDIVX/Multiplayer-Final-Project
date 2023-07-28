@@ -3,13 +3,14 @@ using Photon.Realtime;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.ComponentModel;
 using UnityEngine;
 
 public class GameManager : MonoBehaviourPun
 {
     public static GameManager Instance;
 
-    List<PhotonView> trackedPlayers = new();
+    [SerializeField] List<PhotonView> trackedPlayers = new();
 
     private void Awake()
     {
