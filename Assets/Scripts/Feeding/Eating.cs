@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [RequireComponent(typeof(Collider2D))]
-public class Eating : MonoBehaviourPun
+public class Eating : MonoBehaviourPunCallbacks
 {
     [SerializeField] Collider2D eatingCollider;
 
@@ -19,10 +19,16 @@ public class Eating : MonoBehaviourPun
             if (collision.gameObject.transform.localScale.x < transform.localScale.x)
             {
                 //Destroy the smaller object
-                photonView.RPC("DestroyObject", RpcTarget.All, collision.gameObject);
+                PhotonView collisionPhotonView = collision.gameObject.GetComponent<PhotonView>();
+                if (collisionPhotonView != null)
+                {
+                    photonView.RPC("DestroyObject", RpcTarget.All, collisionPhotonView.ViewID);
+                }
+
                 //Increase the size of the larger object
                 float sizeIncrease = collision.gameObject.transform.localScale.x / transform.localScale.x;
                 transform.localScale += new Vector3(sizeIncrease, sizeIncrease, 0);
+
                 //Invoke the eating event
                 OnEatingEvent?.Invoke(transform, sizeIncrease);
             }
@@ -30,8 +36,12 @@ public class Eating : MonoBehaviourPun
     }
 
     [PunRPC]
-    void DestroyObject(GameObject objectToDestroy)
+    void DestroyObject(int objectToDestroyID)
     {
-        Destroy(objectToDestroy);
+        PhotonView photonViewToDestroy = PhotonView.Find(objectToDestroyID);
+        if (photonViewToDestroy != null)
+        {
+            Destroy(photonViewToDestroy.gameObject);
+        }
     }
 }
