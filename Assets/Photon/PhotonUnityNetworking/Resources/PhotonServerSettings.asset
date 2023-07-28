@@ -39,6 +39,9 @@ MonoBehaviour:
   - RPC_SelectPlayer
   - DisableButton
   - DestroyObject
+  - AddActivePlayer
+  - RemoveActivePlayer
+  - GameOver
   DisableAutoOpenWizard: 1
   ShowSettings: 0
   DevRegionSetOnce: 1
