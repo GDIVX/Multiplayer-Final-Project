@@ -62,21 +62,20 @@ public class GameManager : MonoBehaviourPun
         }
     }
 
-    public void OnEaten(PhotonView photonView)
+    public void OnPlayerEaten(PhotonView photonView)
     {
         if (photonView is null)
         {
             return;
         }
 
+        Debug.Log(photonView.ViewID);
+
         // Assuming your Player class has a PhotonView property
-        Debug.Log($"Looking for ID {photonView.ViewID}");
         foreach (var player in trackedPlayers)
         {
-            Debug.Log($"Comparing player view ID {player.ViewID}");
             if (player.ViewID == photonView.ViewID)
             {
-                Debug.Log("Found");
                 // If the eaten object is a player, remove them from the active players
                 // It's important to not modify a list while iterating over it, so instead mark the player for removal
                 RemoveActivePlayer(player);

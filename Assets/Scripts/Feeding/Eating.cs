@@ -17,23 +17,27 @@ public class Eating : MonoBehaviourPunCallbacks
         if (collision.gameObject.CompareTag("Food") || collision.gameObject.CompareTag("Player"))
         {
             //Compare the size of the two objects
-            if (collision.gameObject.transform.localScale.x < transform.localScale.x)
+            if (collision.gameObject.transform.localScale.x >= transform.localScale.x)
             {
-                //Destroy the smaller object
-                PhotonView collisionPhotonView = collision.gameObject.GetComponent<PhotonView>();
-                if (collisionPhotonView != null)
-                {
-                    GameManager.Instance.OnEaten(collision.transform.gameObject.GetPhotonView());
-                    photonView.RPC("DestroyObject", RpcTarget.All, collisionPhotonView.ViewID);
-                }
-
-                //Increase the size of the larger object
-                float sizeIncrease = collision.gameObject.transform.localScale.x / transform.localScale.x;
-                transform.localScale += new Vector3(sizeIncrease, sizeIncrease, 0);
-
-                //Invoke the eating event
-                OnEatingEvent?.Invoke(transform, sizeIncrease);
+                return;
             }
+            //Destroy the smaller object
+            PhotonView collisionPhotonView = collision.gameObject.GetComponent<PhotonView>();
+            if (collisionPhotonView != null)
+            {
+                if (collision.gameObject.CompareTag("Player"))
+                {
+                    GameManager.Instance.OnPlayerEaten(collision.transform.gameObject.GetPhotonView());
+                }
+                photonView.RPC("DestroyObject", RpcTarget.All, collisionPhotonView.ViewID);
+            }
+
+            //Increase the size of the larger object
+            float sizeIncrease = collision.gameObject.transform.localScale.x / transform.localScale.x;
+            transform.localScale += new Vector3(sizeIncrease, sizeIncrease, 0);
+
+            //Invoke the eating event
+            OnEatingEvent?.Invoke(transform, sizeIncrease);
         }
     }
 
