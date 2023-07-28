@@ -47,7 +47,6 @@ public class Eating : MonoBehaviourPunCallbacks
             return;
         }
 
-        Debug.Log("Is player");
         GameManager.Instance.OnPlayerEaten(collision.transform.gameObject.GetPhotonView());
 
     }

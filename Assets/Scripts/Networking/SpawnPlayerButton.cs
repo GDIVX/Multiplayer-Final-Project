@@ -26,16 +26,20 @@ public class SpawnPlayerButton : MonoBehaviourPun
                 GameObject prefab = Resources.Load<GameObject>(prefabName);
                 if (prefab != null)
                 {
-                    PhotonNetwork.Instantiate(prefabName, Vector3.zero, Quaternion.identity);
+                    GameObject playerObj = PhotonNetwork.Instantiate(prefabName, Vector3.zero, Quaternion.identity);
+                    PhotonView playerPhotonView = playerObj.GetPhotonView();
 
-                    // Disable the button for all clients
-                    photonView.RPC("DisableButton", RpcTarget.All);
+                    if (playerPhotonView != null && playerPhotonView.Owner.ActorNumber == PhotonNetwork.LocalPlayer.ActorNumber)
+                    {
+                        // Disable the button for all clients
+                        photonView.RPC("DisableButton", RpcTarget.All);
 
-                    // Disable the UI for the local player
-                    panel.gameObject.SetActive(false);
+                        // Disable the UI for the local player
+                        panel.gameObject.SetActive(false);
 
-                    //add the player to the list of tracked players
-                    photonView.RPC("AddActivePlayer", RpcTarget.MasterClient, PhotonNetwork.LocalPlayer.ActorNumber);
+                        //add the player to the list of tracked players
+                        photonView.RPC("AddActivePlayer", RpcTarget.MasterClient, playerPhotonView.ViewID);
+                    }
                 }
                 else
                 {
@@ -43,6 +47,7 @@ public class SpawnPlayerButton : MonoBehaviourPun
                 }
             }
         });
+
     }
 
 
@@ -53,7 +58,7 @@ public class SpawnPlayerButton : MonoBehaviourPun
     }
 
     [PunRPC]
-    void AddActivePlayer(int actorNumber)
+    void AddActivePlayer(int viewID)
     {
         if (!PhotonNetwork.IsMasterClient)
         {
@@ -61,9 +66,10 @@ public class SpawnPlayerButton : MonoBehaviourPun
         }
 
         // Find the player's PhotonView
-        PhotonView playerPhotonView = PhotonNetwork.GetPhotonView(actorNumber);
+        PhotonView playerPhotonView = PhotonView.Find(viewID);
 
         // Add the player to the list of tracked players
         GameManager.Instance.AddActivePlayer(playerPhotonView);
     }
+
 }
