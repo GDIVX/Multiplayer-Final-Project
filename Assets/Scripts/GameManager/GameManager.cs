@@ -50,6 +50,7 @@ public class GameManager : MonoBehaviourPun
         {
             trackedPlayers.Remove(player);
 
+
             //if only one player is left, they win
             if (trackedPlayers.Count == 1)
             {
@@ -60,6 +61,9 @@ public class GameManager : MonoBehaviourPun
                 photonView.RPC("GameOver", RpcTarget.All, winner.ViewID);
             }
         }
+
+        //destroy the game object
+        PhotonNetwork.Destroy(player.gameObject);
     }
 
     public void OnPlayerEaten(PhotonView photonView)

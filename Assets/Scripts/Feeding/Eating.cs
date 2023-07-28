@@ -32,28 +32,30 @@ public class Eating : MonoBehaviourPunCallbacks
             return;
         }
 
-        //Destroy the smaller object
-        photonView.RPC("DestroyObject", RpcTarget.All, collisionPhotonView.ViewID);
 
         //Increase the size of the larger object
         float sizeIncrease = collision.gameObject.transform.localScale.x / transform.localScale.x;
         transform.localScale += new Vector3(sizeIncrease, sizeIncrease, 0);
 
+        //Invoke the eating event
         OnEatingEvent?.Invoke(transform, sizeIncrease);
 
-        //Invoke the eating event
-        if (!collision.gameObject.CompareTag("Player"))
+        //Destroy the smaller object
+        if (collision.gameObject.CompareTag("Player"))
         {
+            GameManager.Instance.OnPlayerEaten(collision.transform.gameObject.GetPhotonView());
             return;
         }
+        photonView.RPC("DestroyObject", RpcTarget.All, collisionPhotonView.ViewID); 
 
-        GameManager.Instance.OnPlayerEaten(collision.transform.gameObject.GetPhotonView());
 
     }
 
     [PunRPC]
     void DestroyObject(int objectToDestroyID)
     {
+
+
         PhotonView photonViewToDestroy = PhotonView.Find(objectToDestroyID);
         if (photonViewToDestroy != null)
         {
