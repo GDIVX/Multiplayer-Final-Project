@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class SpawnObjectButton : MonoBehaviourPun
+public class SpawnPlayerButton : MonoBehaviourPun
 {
     [SerializeField] Button button;
     [SerializeField] Transform panel;
@@ -33,6 +33,9 @@ public class SpawnObjectButton : MonoBehaviourPun
 
                     // Disable the UI for the local player
                     panel.gameObject.SetActive(false);
+
+                    //add the player to the list of tracked players
+                    photonView.RPC("AddActivePlayer", RpcTarget.MasterClient, PhotonNetwork.LocalPlayer.ActorNumber);
                 }
                 else
                 {
@@ -49,4 +52,18 @@ public class SpawnObjectButton : MonoBehaviourPun
         button.interactable = false;
     }
 
+    [PunRPC]
+    void AddActivePlayer(int actorNumber)
+    {
+        if (!PhotonNetwork.IsMasterClient)
+        {
+            return;
+        }
+
+        // Find the player's PhotonView
+        PhotonView playerPhotonView = PhotonNetwork.GetPhotonView(actorNumber);
+
+        // Add the player to the list of tracked players
+        GameManager.Instance.AddActivePlayer(playerPhotonView);
+    }
 }

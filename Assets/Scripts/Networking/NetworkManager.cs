@@ -59,5 +59,27 @@ public class NetworkManager : MonoBehaviourPunCallbacks
     public override void OnJoinedRoom()
     {
         Debug.Log($"Joined {PhotonNetwork.CurrentRoom.Name}!");
+
     }
+
+    public override void OnPlayerEnteredRoom(Player newPlayer)
+    {
+        Debug.Log($"{newPlayer.NickName} joined {PhotonNetwork.CurrentRoom.Name}!");
+
+
+    }
+
+    public override void OnPlayerLeftRoom(Player otherPlayer)
+    {
+        Debug.Log($"{otherPlayer.NickName} left {PhotonNetwork.CurrentRoom.Name}!");
+
+        //get the view associated with the player if it exist
+        PhotonView playerView = otherPlayer.TagObject as PhotonView;
+        //if not null, remove it from the list
+        if (playerView != null)
+        {
+            GameManager.Instance.RemoveActivePlayer(playerView);
+        }
+    }
+
 }

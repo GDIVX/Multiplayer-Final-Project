@@ -10,6 +10,7 @@ public class Eating : MonoBehaviourPunCallbacks
     [SerializeField] Collider2D eatingCollider;
 
     public event Action<Transform, float> OnEatingEvent;
+    public event Action<Transform> OnEatenEvent;
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
@@ -22,6 +23,7 @@ public class Eating : MonoBehaviourPunCallbacks
                 PhotonView collisionPhotonView = collision.gameObject.GetComponent<PhotonView>();
                 if (collisionPhotonView != null)
                 {
+                    GameManager.Instance.OnEaten(collision.transform.gameObject.GetPhotonView());
                     photonView.RPC("DestroyObject", RpcTarget.All, collisionPhotonView.ViewID);
                 }
 
