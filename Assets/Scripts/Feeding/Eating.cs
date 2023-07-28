@@ -19,7 +19,7 @@ public class Eating : MonoBehaviourPun
             if (collision.gameObject.transform.localScale.x < transform.localScale.x)
             {
                 //Destroy the smaller object
-                photonView.RPC("DestroyObject", RpcTarget.All);
+                photonView.RPC("DestroyObject", RpcTarget.All, collision.gameObject);
                 //Increase the size of the larger object
                 float sizeIncrease = collision.gameObject.transform.localScale.x / transform.localScale.x;
                 transform.localScale += new Vector3(sizeIncrease, sizeIncrease, 0);
@@ -30,8 +30,8 @@ public class Eating : MonoBehaviourPun
     }
 
     [PunRPC]
-    void DestroyObject()
+    void DestroyObject(GameObject objectToDestroy)
     {
-        Destroy(gameObject);
+        Destroy(objectToDestroy);
     }
 }
