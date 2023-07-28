@@ -31,6 +31,11 @@ public class Eating : MonoBehaviourPunCallbacks
                 }
                 photonView.RPC("DestroyObject", RpcTarget.All, collisionPhotonView.ViewID);
             }
+            else
+            {
+                Debug.LogError("Collision is missing photon view");
+                return;
+            }
 
             //Increase the size of the larger object
             float sizeIncrease = collision.gameObject.transform.localScale.x / transform.localScale.x;
