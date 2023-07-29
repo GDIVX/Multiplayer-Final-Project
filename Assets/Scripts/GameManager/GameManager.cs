@@ -108,12 +108,22 @@ public class GameManager : MonoBehaviourPun
     [PunRPC]
     void GameOver(int winnerViewID)
     {
+        gameOverUI.gameObject.SetActive(true);
+
         PhotonView winner = PhotonView.Find(winnerViewID);
-        if (winner != null)
+        if (winner == null)
         {
-            gameOverUI.gameObject.SetActive(true);
-            playerWonText.text = $"{winner.Owner.NickName} won!";
+            Debug.LogError($"Can't find photon view object for ID {winnerViewID} ");
+            return;
         }
+
+        if (winner.Owner == null)
+        {
+            Debug.LogError($"photon view with ID {winnerViewID} don't have an owner");
+            return;
+        }
+
+        playerWonText.text = $"{winner.Owner.NickName} won!";
     }
 
     [PunRPC]
