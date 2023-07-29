@@ -4,6 +4,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Linq;
 using UnityEngine;
 
 public class GameManager : MonoBehaviourPun
@@ -58,7 +59,9 @@ public class GameManager : MonoBehaviourPun
         if (trackedPlayers.Count == 1)
         {
             //get the player that won
-            PhotonView winner = trackedPlayers[0];
+            PhotonView winner = trackedPlayers.First();
+
+            Debug.Log(winner.ViewID);
 
             //tell all clients that the game is over
             photonView.RPC("GameOver", RpcTarget.All, winner.ViewID);
@@ -77,7 +80,6 @@ public class GameManager : MonoBehaviourPun
             return;
         }
 
-        Debug.Log(photonView.ViewID);
 
         // Assuming your Player class has a PhotonView property
         foreach (var player in trackedPlayers)
