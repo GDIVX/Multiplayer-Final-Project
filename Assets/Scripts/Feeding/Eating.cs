@@ -46,7 +46,8 @@ public class Eating : MonoBehaviourPunCallbacks
             GameManager.Instance.OnPlayerEaten(collision.transform.gameObject.GetPhotonView());
         }
 
-        DestroyObjectAfterDelay(collisionPhotonView, 0.1f);
+        photonView.RPC("DestroyObject", RpcTarget.AllBuffered, collisionPhotonView.ViewID);
+
     }
 
 
