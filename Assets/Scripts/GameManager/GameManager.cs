@@ -9,7 +9,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class GameManager : MonoBehaviourPun
+public class GameManager : MonoBehaviourPunCallbacks
 {
     public static GameManager Instance;
 
@@ -135,4 +135,23 @@ public class GameManager : MonoBehaviourPun
             PhotonNetwork.Destroy(obj);
         }
     }
+
+    public override void OnMasterClientSwitched(Player newMasterClient)
+    {
+        if (PhotonNetwork.IsMasterClient)
+        {
+            photonView.RPC("TransferTrackedPlayersList", newMasterClient, trackedPlayers.ToArray());
+        }
+    }
+
+    [PunRPC]
+    void TransferTrackedPlayersList(Photon.Realtime.Player newMasterClient, PhotonView[] newTrackedPlayers)
+    {
+        if (PhotonNetwork.LocalPlayer == newMasterClient)
+        {
+            trackedPlayers.Clear();
+            trackedPlayers.AddRange(newTrackedPlayers.Select(pv => pv.GetComponent<PhotonView>()));
+        }
+    }
+
 }

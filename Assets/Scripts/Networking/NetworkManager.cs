@@ -67,6 +67,8 @@ public class NetworkManager : MonoBehaviourPunCallbacks
 
     }
 
+
+
     public override void OnPlayerEnteredRoom(Player newPlayer)
     {
         Debug.Log($"{newPlayer.NickName} joined {PhotonNetwork.CurrentRoom.Name}!");
