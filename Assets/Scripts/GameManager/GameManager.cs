@@ -5,13 +5,18 @@ using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
+using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class GameManager : MonoBehaviourPun
 {
     public static GameManager Instance;
 
     [SerializeField] List<PhotonView> trackedPlayers;
+    [SerializeField] TMP_Text playerWonText;
+    [SerializeField] Transform gameOverUI;
+    [SerializeField] Button exitButton;
 
     private void Awake()
     {
@@ -24,6 +29,14 @@ public class GameManager : MonoBehaviourPun
         {
             Destroy(gameObject);
         }
+    }
+
+    private void Start()
+    {
+        exitButton.onClick.AddListener(() =>
+        {
+            NetworkManager.instance.LeaveRoom();
+        });
     }
 
     public void AddActivePlayer(PhotonView player)
@@ -98,7 +111,8 @@ public class GameManager : MonoBehaviourPun
         PhotonView winner = PhotonView.Find(winnerViewID);
         if (winner != null)
         {
-            Debug.Log($"Player {winner.Owner.NickName} won!");
+            gameOverUI.gameObject.SetActive(true);
+            playerWonText.text = $"{winner.Owner.NickName} won!";
         }
     }
 

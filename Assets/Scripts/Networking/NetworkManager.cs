@@ -44,6 +44,10 @@ public class NetworkManager : MonoBehaviourPunCallbacks
         return PhotonNetwork.JoinRandomRoom();
     }
 
+    public void LeaveRoom()
+    {
+        PhotonNetwork.LeaveRoom();
+    }
 
     public void ChangeScene(string sceneName)
     {
