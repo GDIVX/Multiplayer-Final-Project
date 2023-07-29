@@ -47,6 +47,7 @@ public class NetworkManager : MonoBehaviourPunCallbacks
     public void LeaveRoom()
     {
         PhotonNetwork.LeaveRoom();
+        ChangeScene("Main Menu");
     }
 
     public void ChangeScene(string sceneName)

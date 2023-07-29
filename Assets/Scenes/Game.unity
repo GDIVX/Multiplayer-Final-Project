@@ -3510,7 +3510,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   trackedPlayers: []
-  playerWonText: {fileID: 0}
+  playerWonText: {fileID: 1355825889}
   gameOverUI: {fileID: 3877856994638100726}
   exitButton: {fileID: 145521231}
 --- !u!114 &920534408
