@@ -44,11 +44,19 @@ public class Eating : MonoBehaviourPunCallbacks
         if (collision.gameObject.CompareTag("Player"))
         {
             GameManager.Instance.OnPlayerEaten(collision.transform.gameObject.GetPhotonView());
-            return;
         }
-        photonView.RPC("DestroyObject", RpcTarget.All, collisionPhotonView.ViewID); 
+
+        DestroyObjectAfterDelay(collisionPhotonView, 0.1f);
+    }
 
 
+    IEnumerator DestroyObjectAfterDelay(PhotonView objectToDestroy, float delay)
+    {
+        yield return new WaitForSeconds(delay);
+        if (objectToDestroy != null)
+        {
+            photonView.RPC("DestroyObject", RpcTarget.AllBuffered, objectToDestroy.ViewID);
+        }
     }
 
     [PunRPC]

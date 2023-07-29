@@ -61,15 +61,11 @@ public class GameManager : MonoBehaviourPun
             //get the player that won
             PhotonView winner = trackedPlayers.First();
 
-            Debug.Log(winner.ViewID);
-
             //tell all clients that the game is over
             photonView.RPC("GameOver", RpcTarget.All, winner.ViewID);
         }
 
 
-        //destroy the game object on all clients
-        photonView.RPC("DestroyObject", RpcTarget.All, player.ViewID);
 
     }
 
