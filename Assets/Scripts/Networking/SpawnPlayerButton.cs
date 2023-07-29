@@ -10,6 +10,7 @@ public class SpawnPlayerButton : MonoBehaviourPun
     [SerializeField] Button button;
     [SerializeField] Transform panel;
     [SerializeField, FilePath(ParentFolder = "Assets/Resources")] string prefabName;
+    [SerializeField] float spawnRadius = 5f;
 
     private void Start()
     {
@@ -26,7 +27,8 @@ public class SpawnPlayerButton : MonoBehaviourPun
                 GameObject prefab = Resources.Load<GameObject>(prefabName);
                 if (prefab != null)
                 {
-                    GameObject playerObj = PhotonNetwork.Instantiate(prefabName, Vector3.zero, Quaternion.identity);
+
+                    GameObject playerObj = PhotonNetwork.Instantiate(prefabName, Random.insideUnitCircle * spawnRadius, Quaternion.identity);
                     PhotonView playerPhotonView = playerObj.GetPhotonView();
 
                     if (playerPhotonView != null && playerPhotonView.Owner.ActorNumber == PhotonNetwork.LocalPlayer.ActorNumber)
