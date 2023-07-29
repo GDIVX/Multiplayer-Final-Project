@@ -10,7 +10,7 @@ public class GameManager : MonoBehaviourPun
 {
     public static GameManager Instance;
 
-    [SerializeField] List<PhotonView> trackedPlayers = new();
+    [SerializeField] List<PhotonView> trackedPlayers;
 
     private void Awake()
     {
@@ -46,21 +46,24 @@ public class GameManager : MonoBehaviourPun
             return;
         }
 
-        if (trackedPlayers.Contains(player))
+        if (!trackedPlayers.Contains(player))
         {
-            trackedPlayers.Remove(player);
-
-
-            //if only one player is left, they win
-            if (trackedPlayers.Count == 1)
-            {
-                //get the player that won
-                PhotonView winner = trackedPlayers[0];
-
-                //tell all clients that the game is over
-                photonView.RPC("GameOver", RpcTarget.All, winner.ViewID);
-            }
+            return;
         }
+
+        trackedPlayers.Remove(player);
+
+
+        //if only one player is left, they win
+        if (trackedPlayers.Count == 1)
+        {
+            //get the player that won
+            PhotonView winner = trackedPlayers[0];
+
+            //tell all clients that the game is over
+            photonView.RPC("GameOver", RpcTarget.All, winner.ViewID);
+        }
+
 
         //destroy the game object on all clients
         photonView.RPC("DestroyObject", RpcTarget.All, player.ViewID);
