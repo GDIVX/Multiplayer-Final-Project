@@ -62,8 +62,9 @@ public class GameManager : MonoBehaviourPun
             }
         }
 
-        //destroy the game object
-        PhotonNetwork.Destroy(player.gameObject);
+        //destroy the game object on all clients
+        photonView.RPC("DestroyObject", RpcTarget.All, player.ViewID);
+
     }
 
     public void OnPlayerEaten(PhotonView photonView)
@@ -100,5 +101,13 @@ public class GameManager : MonoBehaviourPun
         }
     }
 
-
+    [PunRPC]
+    void DestroyObject(int viewID)
+    {
+        PhotonView obj = PhotonView.Find(viewID);
+        if (obj != null)
+        {
+            PhotonNetwork.Destroy(obj);
+        }
+    }
 }
