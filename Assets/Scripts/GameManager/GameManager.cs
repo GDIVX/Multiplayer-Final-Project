@@ -36,7 +36,7 @@ public class GameManager : MonoBehaviourPunCallbacks
         });
     }
 
-    public void AddActivePlayer(PhotonView player)
+    public void AddActivePlayer(PhotonView view)
     {
         if (!PhotonNetwork.IsMasterClient)
         {
@@ -44,25 +44,25 @@ public class GameManager : MonoBehaviourPunCallbacks
         }
 
 
-        if (!trackedPlayers.Contains(player))
+        if (!trackedPlayers.Contains(view))
         {
-            trackedPlayers.Add(player);
+            trackedPlayers.Add(view);
         }
     }
 
-    public void RemoveActivePlayer(PhotonView player)
+    public void RemoveActivePlayer(PhotonView view)
     {
         if (!PhotonNetwork.IsMasterClient)
         {
             return;
         }
 
-        if (!trackedPlayers.Contains(player))
+        if (!trackedPlayers.Contains(view))
         {
             return;
         }
 
-        trackedPlayers.Remove(player);
+        trackedPlayers.Remove(view);
 
 
         //if only one player is left, they win
@@ -133,56 +133,32 @@ public class GameManager : MonoBehaviourPunCallbacks
         }
     }
 
-    public override void OnMasterClientSwitched(Player newMasterClient)
+    public override void OnPlayerLeftRoom(Player otherPlayer)
     {
-        if (PhotonNetwork.IsMasterClient)
+        if (otherPlayer.IsMasterClient)
         {
-            Debug.Log($"Tracked Players Count: {trackedPlayers.Count}");
-
-            foreach (var player in trackedPlayers)
+            if (PhotonNetwork.IsMasterClient)
             {
-                if (player == null)
-                {
-                    Debug.Log("Null player found in trackedPlayers");
-                }
-                else if (player.ViewID == 0)
-                {
-                    Debug.Log("PhotonView with zero ViewID found");
-                }
-                else
-                {
-                    Debug.Log($"Player {player.ViewID} found");
-                }
+                int[] viewIDs = trackedPlayers.Where(pv => pv != null).Select(pv => pv.ViewID).ToArray();
+                photonView.RPC("TransferTrackedPlayersList", RpcTarget.AllBuffered, viewIDs);
             }
-
-            int[] viewIDs = trackedPlayers.Select(pv => pv.ViewID).ToArray();
-            photonView.RPC("TransferTrackedPlayersList", newMasterClient, viewIDs);
         }
     }
-
 
     [PunRPC]
     void TransferTrackedPlayersList(int[] newTrackedPlayerIDs)
     {
-
-
+        trackedPlayers.Clear();
         foreach (int id in newTrackedPlayerIDs)
         {
-            PhotonView photonView = PhotonView.Find(id);
-            if (photonView == null)
+            PhotonView view = PhotonView.Find(id);
+            if (view != null)
             {
-                Debug.LogWarning($"Can't find photon view for ID {photonView}");
-                continue;
+                AddActivePlayer(view);
             }
-
-            if (trackedPlayers.Contains(photonView))
-            {
-                continue;
-            }
-
-            trackedPlayers.Add(photonView);
         }
     }
+
 
 
 }
