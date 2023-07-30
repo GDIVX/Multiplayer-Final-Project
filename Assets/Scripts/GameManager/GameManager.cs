@@ -137,8 +137,8 @@ public class GameManager : MonoBehaviourPunCallbacks
     {
         if (PhotonNetwork.IsMasterClient)
         {
+            Debug.Log(trackedPlayers.Count);
             int[] viewIDs = trackedPlayers.Select(pv => pv.ViewID).ToArray();
-            Debug.Log($"About to transfer {viewIDs.Length} players to new master client");
             photonView.RPC("TransferTrackedPlayersList", newMasterClient, viewIDs);
         }
     }
@@ -148,7 +148,6 @@ public class GameManager : MonoBehaviourPunCallbacks
     void TransferTrackedPlayersList(int[] newTrackedPlayerIDs)
     {
 
-        Debug.Log($"Starting to transfer {newTrackedPlayerIDs.Length} players");
 
         foreach (int id in newTrackedPlayerIDs)
         {
