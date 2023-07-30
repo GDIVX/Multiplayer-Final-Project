@@ -137,7 +137,24 @@ public class GameManager : MonoBehaviourPunCallbacks
     {
         if (PhotonNetwork.IsMasterClient)
         {
-            Debug.Log(trackedPlayers.Count);
+            Debug.Log($"Tracked Players Count: {trackedPlayers.Count}");
+
+            foreach (var player in trackedPlayers)
+            {
+                if (player == null)
+                {
+                    Debug.Log("Null player found in trackedPlayers");
+                }
+                else if (player.ViewID == 0)
+                {
+                    Debug.Log("PhotonView with zero ViewID found");
+                }
+                else
+                {
+                    Debug.Log($"Player {player.ViewID} found");
+                }
+            }
+
             int[] viewIDs = trackedPlayers.Select(pv => pv.ViewID).ToArray();
             photonView.RPC("TransferTrackedPlayersList", newMasterClient, viewIDs);
         }
