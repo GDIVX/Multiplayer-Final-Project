@@ -1,9 +1,6 @@
 using Photon.Pun;
 using Photon.Realtime;
-using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Linq;
 using TMPro;
 using UnityEngine;
@@ -138,11 +135,10 @@ public class GameManager : MonoBehaviourPunCallbacks
 
     public override void OnMasterClientSwitched(Player newMasterClient)
     {
-        Debug.Log("OnMasterClientSwitched was called by PUN");
         if (PhotonNetwork.IsMasterClient)
         {
-            Debug.Log("We are the new master client");
             int[] viewIDs = trackedPlayers.Select(pv => pv.ViewID).ToArray();
+            Debug.Log($"About to transfer {viewIDs.Length} players to new master client");
             photonView.RPC("TransferTrackedPlayersList", newMasterClient, viewIDs);
         }
     }
@@ -151,14 +147,15 @@ public class GameManager : MonoBehaviourPunCallbacks
     [PunRPC]
     void TransferTrackedPlayersList(int[] newTrackedPlayerIDs)
     {
-        Debug.Log("TransferTrackedPlayersList was called by PUN");
+
+        Debug.Log($"Starting to transfer {newTrackedPlayerIDs.Length} players");
 
         foreach (int id in newTrackedPlayerIDs)
         {
             PhotonView photonView = PhotonView.Find(id);
             if (photonView == null)
             {
-                Debug.LogWarning($"Can't find photon view for ID {id}");
+                Debug.LogWarning($"Can't find photon view for ID {photonView}");
                 continue;
             }
 
@@ -169,7 +166,6 @@ public class GameManager : MonoBehaviourPunCallbacks
 
             trackedPlayers.Add(photonView);
         }
-        Debug.Log("TransferTrackedPlayersList is finished");
     }
 
 
