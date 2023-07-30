@@ -80,6 +80,9 @@ public class NetworkManager : MonoBehaviourPunCallbacks
     {
         Debug.Log($"{otherPlayer.NickName} left {PhotonNetwork.CurrentRoom.Name}!");
 
+        //handle leaderboard
+        GameManager.Instance.AddPlayerToLeaderboard(otherPlayer);
+
         //get the view associated with the player if it exist
         PhotonView playerView = otherPlayer.TagObject as PhotonView;
         //if not null, remove it from the list

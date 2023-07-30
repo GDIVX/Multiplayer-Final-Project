@@ -159,6 +159,63 @@ public class GameManager : MonoBehaviourPunCallbacks
         }
     }
 
+    public void AddPlayerToLeaderboard(PhotonView view)
+    {
+        if (!PhotonNetwork.IsMasterClient)
+        {
+            return;
+        }
 
+        if (view == null)
+        {
+            return;
+        }
+
+        if (view.Owner == null)
+        {
+            return;
+        }
+
+        if (view.Owner.NickName == null)
+        {
+            return;
+        }
+
+        float size = view.GetComponent<Transform>().localScale.x;
+        int score = Mathf.RoundToInt(size * 100);
+
+        Leaderboard.Instance.AddEntry(view.Owner.NickName, score, size);
+    }
+
+    public void AddPlayerToLeaderboard(Player player)
+    {
+        if (!PhotonNetwork.IsMasterClient)
+        {
+            return;
+        }
+
+        if (player == null)
+        {
+            return;
+        }
+
+        if (player.NickName == null)
+        {
+            return;
+        }
+
+        //Get the player's photon view
+        PhotonView view = player.TagObject as PhotonView;
+
+        //If the player has a photon view, add them to the leaderboard
+        if (view != null)
+        {
+            float size = view.GetComponent<Transform>().localScale.x;
+            int score = Mathf.RoundToInt(size * 100);
+
+            Leaderboard.Instance.AddEntry(player.NickName, score, size);
+        }
+
+    }
 
 }
