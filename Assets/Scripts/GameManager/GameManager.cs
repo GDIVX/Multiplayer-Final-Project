@@ -140,18 +140,28 @@ public class GameManager : MonoBehaviourPunCallbacks
     {
         if (PhotonNetwork.IsMasterClient)
         {
-            photonView.RPC("TransferTrackedPlayersList", newMasterClient, trackedPlayers.ToArray());
+            int[] viewIDs = trackedPlayers.Select(pv => pv.ViewID).ToArray();
+            photonView.RPC("TransferTrackedPlayersList", newMasterClient, viewIDs);
         }
     }
 
+
     [PunRPC]
-    void TransferTrackedPlayersList(Photon.Realtime.Player newMasterClient, PhotonView[] newTrackedPlayers)
+    void TransferTrackedPlayersList(int[] newTrackedPlayerIDs)
     {
-        if (PhotonNetwork.LocalPlayer == newMasterClient)
+
+        trackedPlayers.Clear();
+        foreach (int id in newTrackedPlayerIDs)
         {
-            trackedPlayers.Clear();
-            trackedPlayers.AddRange(newTrackedPlayers.Select(pv => pv.GetComponent<PhotonView>()));
+            PhotonView photonView = PhotonView.Find(id);
+            if (photonView == null)
+            {
+                Debug.LogWarning($"Can't find photon view for ID {id}");
+                continue;
+            }
+            trackedPlayers.Add(photonView);
         }
     }
+
 
 }
