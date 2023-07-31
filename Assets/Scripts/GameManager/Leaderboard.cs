@@ -25,25 +25,30 @@ public class Leaderboard
         }
     }
 
+    public Dictionary<string, int> ScoreTable { get => _scoreTable; }
+    public Dictionary<string, float> SizeTable { get => _sizeTable; }
+
     public void AddEntry(string playerName, int score, float fishSize)
     {
-        if (_scoreTable.ContainsKey(playerName))
+        if (ScoreTable.ContainsKey(playerName))
         {
-            _scoreTable[playerName] += score;
-            _sizeTable[playerName] += fishSize;
+            ScoreTable[playerName] += score;
+            SizeTable[playerName] += fishSize;
         }
         else
         {
-            _scoreTable.Add(playerName, score);
-            _sizeTable.Add(playerName, fishSize);
+            ScoreTable.Add(playerName, score);
+            SizeTable.Add(playerName, fishSize);
         }
 
     }
 
     public (int, float) GetEntry(string playerName)
     {
-        return _scoreTable.ContainsKey(playerName) && _sizeTable.ContainsKey(playerName)
-            ? (_scoreTable[playerName], _sizeTable[playerName])
+        return ScoreTable.ContainsKey(playerName) && SizeTable.ContainsKey(playerName)
+            ? (ScoreTable[playerName], SizeTable[playerName])
             : (0, 0);
     }
 }
+
+

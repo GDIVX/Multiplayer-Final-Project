@@ -1,7 +1,9 @@
 using Photon.Pun;
 using Photon.Realtime;
+using Sirenix.OdinInspector;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -13,6 +15,7 @@ public class GameManager : MonoBehaviourPunCallbacks
     [SerializeField] List<PhotonView> trackedPlayers;
     [SerializeField] TMP_Text playerWonText;
     [SerializeField] Transform gameOverUI;
+    [SerializeField] LeaderboardNetworkManager leaderboardNetworkManager;
     [SerializeField] Button exitButton;
 
     private void Awake()
@@ -102,10 +105,22 @@ public class GameManager : MonoBehaviourPunCallbacks
 
     }
 
+    [Button]
+    void Debug_GameOver()
+    {
+
+        photonView.RPC("GameOver", RpcTarget.All, trackedPlayers[0].ViewID);
+
+    }
+
     [PunRPC]
     void GameOver(int winnerViewID)
     {
         gameOverUI.gameObject.SetActive(true);
+
+        //Update the leaderboard
+        trackedPlayers.ForEach((view) => AddPlayerToLeaderboard(view));
+        leaderboardNetworkManager.FetchLeaderboard();
 
         PhotonView winner = PhotonView.Find(winnerViewID);
         if (winner == null)
@@ -181,9 +196,11 @@ public class GameManager : MonoBehaviourPunCallbacks
             return;
         }
 
+
         float size = view.GetComponent<Transform>().localScale.x;
         int score = Mathf.RoundToInt(size * 100);
 
+        Debug.Log($"Adding {view.Owner.NickName} to leader board. Score: {score} | Size: {size}");
         Leaderboard.Instance.AddEntry(view.Owner.NickName, score, size);
     }
 
@@ -217,5 +234,6 @@ public class GameManager : MonoBehaviourPunCallbacks
         }
 
     }
+
 
 }

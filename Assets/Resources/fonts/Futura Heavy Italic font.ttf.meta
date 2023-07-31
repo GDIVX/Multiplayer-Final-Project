@@ -1,0 +1,22 @@
+fileFormatVersion: 2
+guid: 54f9d70c666f14d4098bea54a9fdfbcb
+TrueTypeFontImporter:
+  externalObjects: {}
+  serializedVersion: 4
+  fontSize: 16
+  forceTextureCase: -2
+  characterSpacing: 0
+  characterPadding: 1
+  includeFontData: 1
+  fontNames:
+  - Futura Hv BT
+  fallbackFontReferences:
+  - {fileID: 12800000, guid: d336ce87d620a4a47845b19a62ca4065, type: 3}
+  customCharacters: 
+  fontRenderingMode: 0
+  ascentCalculationMode: 1
+  useLegacyBoundsCalculation: 0
+  shouldRoundAdvanceValue: 1
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
